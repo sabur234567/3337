@@ -1,0 +1,100 @@
+create table Branch
+	(branchID int not null, 
+	 branchName varchar(20),
+	 branchCity varchar(20), 
+	 assets numeric(12,2),
+	 primary key (branchID)
+	) Engine=InnoDB;
+
+create table Customer
+	(customerID int not null, 
+	 customerName varchar(20),
+	 customerStreet varchar(20),
+	 customerCity varchar(20), 
+	 primary key (customerID)
+	) Engine=InnoDB;
+
+create table Loan
+	(loanNumber int not null, 
+	 branchID int not null,
+	 amount int not null,
+	 primary key (loanNumber),
+	 foreign key (branchID) references Branch(branchID)
+	) Engine=InnoDB;
+
+create table Borrower
+	(customerID int not null, 
+	 loanNumber int not null,
+	 primary key (customerID, loanNumber),
+	 foreign key (customerID) references Customer(customerID) on delete cascade,
+ 	 foreign key (loanNumber) references Loan(loanNumber)
+	) Engine=InnoDB;
+
+create table Account
+	(accountNumber int not null, 
+	 branchID int not null,
+	 balance numeric(12,2),
+	 primary key (accountNumber),
+	 foreign key (branchID) references Branch(branchID)
+	) Engine=InnoDB;
+
+create table Depositor
+	(customerID int not null,
+	 accountNumber int not null,
+	 primary key (customerID, accountNumber),
+	 foreign key (customerID) references Customer(customerID),
+	 foreign key (accountNumber) references Account(accountNumber)
+	) Engine=InnoDB;
+
+insert into branch values(12345, 'LoanDepot','Chicago', 1000000);
+insert into branch values(43214, 'LoanBox','Chicago', 100000000);
+insert into branch values(54321, 'LoanVille','Austin', 100000);
+insert into branch values(32145, 'Bank Of America','New York', 80000000);
+insert into branch values(23412, 'Downtown','Houston', 7000000);
+
+insert into customer values(12415, 'Sabur','Ox Wagon', 'Austin');
+insert into customer values(12244, 'Kyle','Sunrise Street', 'Round Rock');
+insert into customer values(31824, 'Sam','Zilker',' Austin');
+insert into customer values(81255, 'Rob','6th Street', 'Chicago');
+insert into customer values(75152, 'Gary','8th Street','New York');
+
+insert into loan values(6124, 12345, 5000);
+insert into loan values(2525, 43214, 9000);
+insert into loan values(1242, 23412, 1000000);
+insert into loan values(4111, 32145, 1000);
+insert into loan values(6998, 54321, 80000);
+
+insert into borrower values(12415, 6124);
+insert into borrower values(12244, 2525);
+insert into borrower values(31824, 1242);
+insert into borrower values(81255, 6124);
+insert into borrower values(75152, 6998);
+
+insert into account values(900214, 12345, 80227);
+insert into account values(242524, 23412, 20010);
+insert into account values(125512, 32145, 160000);
+insert into account values(149021, 54321, 921400);
+insert into account values(912433, 54321, 2164);
+
+insert into depositor values(12415, 900214);
+insert into depositor values(12244, 912433);
+insert into depositor values(75152, 149021);
+insert into depositor values(81255, 125512);
+insert into depositor values(31824, 242524);
+
+select branchName from branch where branchCity = 'Chicago';
+
+select loanNumber from loan where amount>10000;
+
+select customerName from customer, depositor,account where customer.customerID = depositor.customerID and account.accountNumber = depositor.accountNumber and balance>6000;
+
+select customerName from customer,borrower,loan,branch where customer.customerID = borrower.customerID and loan.loanNumber = borrower.loanNumber and branch.branchID = loan.branchID a
+nd branchName = "Downtown";
+
+select customerName from customer,depositor, account, branch where customer.customerID= depositor.customerID and depositor.accountNumber=account.accountNumber and account.branchID =
+branch.branchID and branchName = 'LoanVille' and balance>6000;
+
+
+
+
+

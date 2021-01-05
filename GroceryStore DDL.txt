@@ -1,0 +1,47 @@
+CREATE DATABASE GroceryStore;
+
+CREATE TABLE Employee (
+	EmpID int not null,
+	EmpFirstName varchar(20),
+	EmpLastName varchar(30),
+	primary key (EmpID)
+	) Engine=InnoDB;
+
+
+CREATE TABLE Customer (
+	CustID int auto_increment not null,
+	CustFirstName varchar(20),
+	CustLastName varchar(30),
+	CustFirstVisit Date,
+	primary key (CustID)
+	) Engine=InnoDB;
+
+
+CREATE TABLE Product (
+	ProdID int auto_increment not null,
+	ProdName varchar(20),
+	ProdDescription varchar(100),
+	primary key (ProdID)
+	) Engine=InnoDB;
+
+
+CREATE TABLE Sale (
+	SaleID int auto_increment not null,
+	SaleDate Date,
+	SaleAmount numeric(10,2),
+	EmployeeID int,
+	CustID int,
+	primary key (SaleID),
+	foreign key (EmployeeID) references Employee(EmpID),
+	foreign key (CustID) references Customer(CustID)
+	) Engine=InnoDB;
+
+
+
+CREATE TABLE ProductSale (
+	ProductID int,
+	SaleID int,
+	primary key (ProductID,SaleID),
+	foreign key (ProductID) references Product(ProdID),
+	foreign key (SaleID) references Sale(SaleID)
+	) Engine=InnoDB;

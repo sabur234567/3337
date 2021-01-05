@@ -1,0 +1,52 @@
+
+create table employee
+	(personID int not null, 
+	 personName varchar(20),
+	 street varchar(20), 
+	 city varchar(20),
+	 primary key (personID)
+	) Engine=InnoDB;
+
+create table company
+	(companyID int not null, 
+	 companyName varchar(20),
+	 city varchar(20),
+	 primary key (companyID)
+	) Engine=InnoDB;
+
+create table works
+	(personID int not null, 
+	 companyID int not null,
+	 salary numeric(8,2) check (salary > 0),
+	 primary key (personID, companyID)
+	) Engine=InnoDB;
+
+insert into employee values(12345, 'Sabur','Ruby Red', 'Austin');
+insert into employee values(54321, 'Bill','Wagon Trail', 'Round Rock');
+insert into employee values(12295, 'Sam','Kenny Fort', 'Round Rock');
+insert into employee values(43215, 'Rob','Lincoln Road', 'Miami');
+insert into employee values(98765, 'Bob','Miracle Mile', 'Miami');
+
+insert into company values(56542, 'Sams Club','Austin');
+insert into company values(98524, 'Costco','Round Rock');
+insert into company values(93230, 'HEB','Round Rock');
+insert into company values(23123, 'Walmart','Miami');
+insert into company values(65128, 'Target','Miami');
+
+insert into works values(12345,56542,50000);
+insert into works values(54321,98524,55000);
+insert into works values(12295,93230,65000);
+insert into works values(43215,23123,80000);
+insert into works values(98765,65128,40000);
+
+select personName from employee where city='Miami';
+
+select personName from employee,works where employee.personID=works.personID and salary>100000;
+
+select personName from employee,works where employee.personID=works.personID and salary>100000 and city='Miami';
+
+select personName from employee,works,company where company.companyID = works.companyID and employee.personID = works.personID and company.companyName='First Bank Corporation';
+
+select personName,employee.city from employee,works,company where company.companyID = works.companyID and employee.personID = works.personID and company.companyName='First Bank Corporation';
+
+select personName,employee.city,employee.street from employee,works,company where company.companyID = works.companyID and employee.personID = works.personID and company.companyName='First Bank Corporation' and salary>10000;
